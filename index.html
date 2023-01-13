@@ -1,0 +1,157 @@
+<!--------------------------------------------------
+// Title: CMPE360 Project02 - The Museum of Precious Metals & Minerals
+// Authors: BATURALP KIZILTAN & KAYRA POLAT
+// IDs: 4456996054 & 1000306178
+// Section: 1
+// Project: 2
+-------------------------------------------------->
+
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>The Museum of Precious Metals & Minerals</title>
+		<style>
+			body {
+				margin: 0;
+			}
+			.panel {
+				position: absolute;
+				background-color: rgba(0,0,0,0.5);
+				color: white;
+				font-family: sans-serif;
+			}
+			#hints-panel {
+				z-index: 1;
+				top: .5rem;
+				left: .5rem;
+				width: 10rem;
+				height: 17rem;
+				text-align: left;
+				padding: 1rem;
+				border-radius: 5px;
+			}
+			#intro-panel {
+				z-index: 0;
+				width: 100%;
+				height: 100%;
+				text-align: center;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="hints-panel" class="panel">
+			<b>Fly Up:</b> Shift <br/><br/>
+			<b>Fly Down:</b> Space <br/><br/>
+			<b>&#8593:</b> W <br/><br/>
+			<b>&#8595:</b> S <br/><br/>
+			<b>&#8594:</b> D <br/><br/>
+			<b>&#8592:</b> A <br/><br/>
+			<b>Look Around:</b> Mouse <br/><br/>
+			<b>Pause:</b> Esc <br/><br/>
+		</div>
+
+		<div id="intro-panel" class="panel">
+			<br />
+			<h4>## TEDU CMPE360 Project02 - Fall2022 ##</h4>
+			<h2>The Museum of Precious Metals & Minerals</h2>
+			<h3>Baturalp Kızıltan & Kayra Polat</h3>
+			<br />
+			<h1>Click to focus!</h1>
+		</div>
+
+		<script type="x-shader/x-vertex" id="vertex-shader">
+			/**
+			 * Retrieved from https://shaderfrog.com/app/view/256
+			 */
+			 
+			// Set the precision for data types used in this shader
+			precision highp float;
+			precision highp int;
+			
+			// Default THREE.js uniforms available to both fragment and vertex shader
+			uniform mat4 modelMatrix;
+			uniform mat4 modelViewMatrix;
+			uniform mat4 projectionMatrix;
+			uniform mat4 viewMatrix;
+			uniform mat3 normalMatrix;
+			
+			// Default uniforms provided by ShaderFrog.
+			uniform vec3 cameraPosition;
+			uniform float time;
+			
+			// Default attributes provided by THREE.js. Attributes are only available in the
+			// vertex shader. You can pass them to the fragment shader using varyings
+			attribute vec3 position;
+			attribute vec3 normal;
+			attribute vec2 uv;
+			attribute vec2 uv2;
+			
+			// Examples of variables passed from vertex to fragment shader
+			varying vec3 vPosition;
+			varying vec3 vNormal;
+			varying vec2 vUv;
+			varying vec2 vUv2;
+			
+			void main() {
+				// To pass variables to the fragment shader, you assign them here in the
+				// main function. Traditionally you name the varying with vAttributeName
+				vNormal = normal;
+				vUv = uv;
+				vUv2 = uv2;
+				vPosition = position;
+			
+				// This sets the position of the vertex in 3d space. The correct math is
+				// provided below to take into account camera and object data.
+				gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
+			}
+		</script>
+		
+		<script type="x-shader/x-fragment" id="fragment-shader">
+			/**
+			* Retrieved from https://shaderfrog.com/app/view/256
+			*/
+			
+			precision highp float;
+			varying vec2 vUv;
+			uniform float time;
+			uniform vec2 mouse;
+			uniform vec2 resolution;
+			vec2 R = resolution;
+			vec2 Offset;
+			vec2 Scale = vec2(0.02, 0.002);
+			float Saturation = 0.18;
+
+			vec3 lungth(vec2 x, vec3 c) {
+				return vec3(length(x + c.r), length(x + c.g), length(c.b));
+			}
+
+			void main(void) {
+				vec2 position = (vUv.xy - resolution * 0.9) / resolution.yy;
+				float th = atan(position.y, position.x) / (1.0 * 3.1415926);
+				float dd = length(position) + 0.005;
+				float d = 0.5 / dd + time;
+				vec2 x = vUv.xy;
+				vec3 c2 = vec3(0, 0, 0);
+				x = x * Scale * R / R.x;
+				x + sin(x.yx * sqrt(vec2(1, 9))) / 1.;
+				c2 = lungth(sin(x * sqrt(vec2(3, 43))), vec3(5, 6, 7) * Saturation * d);
+				x += sin(x.yx * sqrt(vec2(73, 5))) / 5.;
+				c2 = 2. * lungth(sin(time + x * sqrt(vec2(33., 23.))), c2 / 9.);
+				x += sin(x.yx * sqrt(vec2(93, 7))) / 3.;
+				c2 = lungth(sin(x * sqrt(vec2(3., 1.))), c2 / 2.0);
+				c2 = .5 + .5 * sin(c2 * 8.);
+				vec3 uv = vec3(th + d, th - d, th + sin(d) * 0.45);
+				float a = 0.5 + cos(uv.x * 3.1415926 * 2.0) * 0.5;
+				float b = 0.5 + cos(uv.y * 3.1415926 * 2.0) * 0.5;
+				float c = 0.5 + cos(uv.z * 3.1415926 * 6.0) * 0.5;
+				vec3 color = mix(vec3(0.1, 0.5, 0.5), vec3(0.1, 0.1, 0.2), pow(a, 0.2)) * 3.;
+				color += mix(vec3(0.8, 0.2, 1.0), vec3(0.1, 0.1, 0.2), pow(b, 0.1)) * 0.75;
+				color += mix(c2, vec3(0.1, 0.2, 0.2), pow(c, 0.1)) * 0.75;
+				gl_FragColor = vec4((color * dd), 1.0);
+			}
+		</script>
+
+		<script type="module" src="./museum.js"></script>
+	</body>
+</html>

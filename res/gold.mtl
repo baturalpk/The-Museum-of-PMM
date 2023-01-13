@@ -1,0 +1,15 @@
+# Blender MTL File: 'gold-baturalpk.blend'
+# Material Count: 1
+
+newmtl Material
+Ns 380.250007
+Ka 0.500000 0.500000 0.500000
+Kd 0.658375 0.428690 0.038204
+Ks 0.500000 0.500000 0.500000
+Ke 0.000000 0.000000 0.000000
+Ni 1.450000
+d 1.000000
+illum 3
+map_Kd gold-scuffed-bl\\gold-scuffed_basecolor-boosted.png
+map_Ns gold-scuffed-bl\\gold-scuffed_roughness.png
+refl gold-scuffed-bl\\gold-scuffed_metallic.png
