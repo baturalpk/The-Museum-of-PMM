@@ -15,9 +15,24 @@
 			body {
 				margin: 0;
 			}
+			#loading-screen {
+				position: absolute;
+				z-index: 100;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background: black;
+				padding-top: 25%;
+				text-align: center;
+				color: white;
+			}
+			#loading-screen h2 > span {
+				color: rgba(255, 255, 255, 0.7);
+			}
 			.panel {
 				position: absolute;
-				background-color: rgba(0,0,0,0.5);
+				background-color: rgba(0, 0, 0, 0.5);
 				color: white;
 				font-family: sans-serif;
 			}
@@ -40,6 +55,11 @@
 		</style>
 	</head>
 	<body>
+		<div id="loading-screen">
+			<h1>Loading...</h1>
+			<h2>✨ <span>The Museum of Precious Metals & Minerals</span> ✨</h2>
+		</div>
+
 		<div id="hints-panel" class="panel">
 			<b>Fly Up:</b> Shift <br/><br/>
 			<b>Fly Down:</b> Space <br/><br/>

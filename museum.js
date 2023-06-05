@@ -12,6 +12,12 @@ import { OBJLoader } from './lib/three.js-r147/examples/jsm/loaders/OBJLoader.js
 import { PointerLockControls } from './lib/three.js-r147/examples/jsm/controls/PointerLockControls.js';
 import { RGBELoader } from './lib/three.js-r147/examples/jsm/loaders/RGBELoader.js';
 
+// Set up the loading manager
+const manager = new THREE.LoadingManager();
+manager.onLoad = () => {
+  document.getElementById('loading-screen').style.display = 'none';
+};
+
 // Set up the camera
 const camera = new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(-10, 3, -19);
@@ -32,15 +38,17 @@ renderer.shadowMap.enabled = true;
 
 // Set up the skybox and wrap the environment map texture
 const pmremGenerator = new THREE.PMREMGenerator(renderer);
-new RGBELoader().setDataType(THREE.HalfFloatType).load('res/chinese_garden_2k.hdr', texture => {
-  var envMap = pmremGenerator.fromEquirectangular(texture).texture;
+new RGBELoader(manager)
+  .setDataType(THREE.HalfFloatType)
+  .load('res/chinese_garden_2k.hdr', texture => {
+    var envMap = pmremGenerator.fromEquirectangular(texture).texture;
 
-  scene.background = envMap;
-  scene.environment = envMap;
+    scene.background = envMap;
+    scene.environment = envMap;
 
-  texture.dispose();
-  pmremGenerator.dispose();
-});
+    texture.dispose();
+    pmremGenerator.dispose();
+  });
 pmremGenerator.compileEquirectangularShader();
 
 // Set up for camera controls
@@ -95,11 +103,11 @@ function initializeModels() {
   scene.add(artTable);
 
   // #4: Diamond
-  let mtlLoader = new MTLLoader();
+  let mtlLoader = new MTLLoader(manager);
   mtlLoader.setPath('res/');
   mtlLoader.load('diamond.mtl', mats => {
     mats.preload();
-    let objLoader = new OBJLoader();
+    let objLoader = new OBJLoader(manager);
     objLoader.setMaterials(mats);
     objLoader.load(
       './res/diamond.obj',
@@ -166,7 +174,7 @@ function initializeModels() {
   // #7 Dark Crystal
   mtlLoader.load('crystal.mtl', mats => {
     mats.preload();
-    let objLoader = new OBJLoader();
+    let objLoader = new OBJLoader(manager);
     objLoader.setMaterials(mats);
     objLoader.load(
       './res/crystal.obj',
@@ -186,7 +194,7 @@ function initializeModels() {
   // #8 Gold Bar
   mtlLoader.load('gold.mtl', mats => {
     mats.preload();
-    let objLoader = new OBJLoader();
+    let objLoader = new OBJLoader(manager);
     objLoader.setMaterials(mats);
     objLoader.load(
       './res/gold.obj',
