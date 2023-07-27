@@ -4,7 +4,7 @@ A 3D virtual museum application. Developed as a term project of the Computer Gra
 
 ---
 
-- **Live at:** https://baturalpk.dev/The-Museum-of-PMM/
+- **Live at:** https://baturalp.dev/The-Museum-of-PMM/
 
 > **Note:** The initial load may take a while.
 
